@@ -1,3 +1,5 @@
+from datetime import datetime
+import pandas as pd
 import numpy as np
 from path import Path
 import re
@@ -90,3 +92,23 @@ def convert_time(data, reading_type):
         if usable:
             X.append(vec)
     return np.array(X)
+
+def load_pandas(data_dir):
+    csvs = load_data(data_dir)
+    data_map = {}
+    for c, text in csvs.iteritems():
+        data_map[c] = load_csv_from_string(text)
+    data_panel = {}
+    for date in data_map:
+        reading_data = {}
+        for reading_type in data_map[date]:
+            reading_data[reading_type] = pd.DataFrame(data_map[date][reading_type])
+        data_panel[date] = reading_data
+    D1 = pd.Panel4D(data_panel).convert_objects(convert_numeric=True).swapaxes(1, 2)
+    final_data_map = {}
+    for date in D1.keys():
+        for time in D1[date].keys():
+            year, month, day, hour = int(date[:4]), int(date[4:6]), int(date[6:8]), int(time)
+            final_data_map[datetime(year, month, day, hour=hour)] = D1[date][time]
+    data = pd.Panel(final_data_map).swapaxes(0, 1)
+    return data
