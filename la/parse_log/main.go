@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"github.com/sharadmv/metasense/la/util"
+)
 
 func main() {
-	fmt.Println("vim-go")
+	util.InitLogging()
+
+	args := parseArgs()
+	util.Log.Debugf("Parsing log file: %s\n", *args.filename)
+	parseFile(*args.filename)
 }
