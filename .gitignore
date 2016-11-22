@@ -1,2 +1,8 @@
 *.pyc
 *.csv
+venv/
+build/
+dist/
+.ipynb_checkpoints/
+data
+metasense.egg-info/
