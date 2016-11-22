@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+import requests
+from io import StringIO
+from argparse import ArgumentParser
+import pandas as pd
+
+BASE_URL = "https://www.arb.ca.gov/aqmis2/display.php?sitelist=All&filefmt=csv&fname=wat&datafmt=web&download=y&first_date={start_date}&param={param}&units=007&year={end_year}&mon={end_month}&day={end_day}&report=PICKDATA&site=2899&ptype=aqd&o3switch=new&hours=all&statistic=&qselect=Screened&submit=All+Sites&rows=1"
+
+START_DATE = "08-05-2016"
+END_DATE = "10-20-2016"
+
+def parse_args():
+    argparser = ArgumentParser()
+
+    argparser.add_argument("--start_date", default=START_DATE)
+    argparser.add_argument("--end_date", default=END_DATE)
+    return argparser.parse_args()
+
+def get_data(param, start_date, end_date):
+    end_date = end_date.split("-")
+    data = requests.get(BASE_URL.format(
+        param=param,
+        start_date=start_date,
+        end_year=end_date[2],
+        end_month=end_date[0],
+        end_day=end_date[1]
+    )).text
+    df = pd.read_csv(StringIO(data.split("Quality Flag Definition")[0].strip()))
+    df["epa-"+param.lower()] = df["value"]
+    return df[["date", "start_hour", "epa-"+param.lower()]]
+
+if __name__ == "__main__":
+    args = parse_args()
+    ozone = get_data("OZONE", args.start_date, args.end_date)
+    co = get_data("CO", args.start_date, args.end_date)
+    no2 = get_data("NO2", args.start_date, args.end_date)
+    data = ozone.merge(co, on=["date", "start_hour"]).merge(no2, on=["date", "start_hour"])
+    data["time"] = data["date"] + " " + data["start_hour"].map(lambda x: "%d:00" % x)
+    data.index = pd.to_datetime(data.time)
+
+    data = data[["epa-co", "epa-no2", "epa-ozone"]]
+    print(data.to_csv(index='time'), end="")
