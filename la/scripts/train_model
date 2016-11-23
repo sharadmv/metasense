@@ -39,8 +39,7 @@ if __name__ == "__main__":
     # print(earth.summary(), file=sys.stderr)
 
     # print('R^2: %s' % cf.score(X, y), file=sys.stderr)
-    print("RMSE: %.3f"
-                % np.sqrt(np.mean((preds - y) ** 2)), file=sys.stderr)
+    print("RMSE: %.3f" % np.sqrt(np.mean((preds - y) ** 2)), file=sys.stderr)
     # print('Coefficients: %s' % cf.coef_, file=sys.stderr)
     # print('Intercept: %s' % cf.intercept_, file=sys.stderr)
 

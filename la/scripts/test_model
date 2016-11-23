@@ -29,6 +29,5 @@ if __name__ == "__main__":
     y = data[y]
     data[args.out_column] = preds = model.predict(X)
 
-    print("RMSE: %.3f"
-                % np.sqrt(np.mean((preds - y) ** 2)), file=sys.stderr)
+    print("RMSE: %.3f" % np.sqrt(np.mean((preds - y) ** 2)), file=sys.stderr)
     print(data.to_csv(index_label='time'), end="")
