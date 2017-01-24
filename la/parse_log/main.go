@@ -2,12 +2,11 @@ package main
 
 import (
 	"github.com/sharadmv/metasense/la/util"
+	"os"
 )
 
 func main() {
 	util.InitLogging()
 
-	args := parseArgs()
-	util.Log.Debugf("Parsing log file: %s\n", *args.filename)
-	parseFile(*args.filename)
+	parseFile(os.Stdin)
 }

@@ -18,10 +18,10 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
 
-    data = pd.read_csv(sys.stdin, index_col='time')
+    data = pd.read_csv(sys.stdin, index_col='datetime')
     data.index = pd.to_datetime(data.index).tz_localize('US/Pacific')
 
-    data.plot(y=[args.y1, args.y2])
+    data.plot(y=[args.y1, args.y2], alpha=0.5)
     plt.legend(loc='best')
     data['error'] = np.sqrt((data[args.y1] - data[args.y2])**2)
     data = data.groupby(pd.TimeGrouper(freq='W')).mean()

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/sharadmv/metasense/la/util"
-	"os"
+	"io"
 )
 
 type BoardLogMessage struct {
@@ -80,13 +80,13 @@ func printMessage(message BoardLogMessage, negCount *int) {
 		convertRaw(message.Raw.PT, rng), convertRaw(message.Raw.NC, rng))
 }
 
-func parseFile(path string) {
+func parseFile(file io.Reader) {
 	fmt.Println("unixtime,datetime,no2-A,no2-W,o3-A,o3-W,co-A,co-W,temperature,pressure,humidity,pt,nc")
-	file, err := os.Open(path)
+	//file, err := os.Open(path)
 	totalCount := 0
 	negCount := 0
-	util.CheckErr(err)
-	defer file.Close()
+	//util.CheckErr(err)
+	//defer file.Close()
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		printMessage(parseLine(scanner.Text()), &negCount)
