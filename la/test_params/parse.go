@@ -61,6 +61,7 @@ func testFile(file io.Reader, paramsPath string) {
 			first = false
 			continue
 		}
+		datetime := record[0]
 		no2A, _ := strconv.ParseFloat(record[1], 32)
 		no2W, _ := strconv.ParseFloat(record[2], 32)
 		o3A, _ := strconv.ParseFloat(record[3], 32)
@@ -70,6 +71,6 @@ func testFile(file io.Reader, paramsPath string) {
 		temperature, _ := strconv.ParseFloat(record[7], 32)
 		humidity, _ := strconv.ParseFloat(record[9], 32)
 		actualCO, _ := strconv.ParseFloat(record[12], 32)
-		fmt.Printf("Pred: %.3f\tActual:%.3f\n", CO(coA, coW, o3A, o3W, no2A, no2W, temperature, humidity, params.CO.Weights, params.CO.Intercept), actualCO)
+		fmt.Printf("%s,%.3f,%.3f\n", datetime, CO(coA, coW, o3A, o3W, no2A, no2W, temperature, humidity, params.CO.Weights, params.CO.Intercept), actualCO)
 	}
 }
