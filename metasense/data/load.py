@@ -68,6 +68,20 @@ BASE_VOLTAGE = {
             'W': 278,
             'A': 380,
         },
+    },
+    9: {
+        'CO': {
+            'W': 325,
+            'A': 270,
+        },
+        'NO2': {
+            'W': 306,
+            'A': 290,
+        },
+        'O3': {
+            'W': 418,
+            'A': 418,
+        },
     }
 }
 
@@ -85,7 +99,10 @@ def get_multiplier(data, gas):
 
 def load_board(board_id, data_dir=Path('/home/sharad/data/metasense/la/')):
     data = pd.read_csv(data_dir / "csv"/ "B%u.csv" % board_id, index_col='datetime', parse_dates=True)
-    data = data.iloc[INITIAL_REMOVE[board_id]:-AFTER_REMOVE[board_id]]
+    if board_id in AFTER_REMOVE:
+        data = data.iloc[INITIAL_REMOVE[board_id]:-AFTER_REMOVE[board_id]]
+    else:
+        data = data.iloc[INITIAL_REMOVE[board_id]:]
 
     data['co-corr'] = get_multiplier(data, 'CO')
     data['no2-corr'] = get_multiplier(data, 'NO2')
@@ -100,6 +117,7 @@ def load_board(board_id, data_dir=Path('/home/sharad/data/metasense/la/')):
 
     if board_id != 9:
         train_data, test_data = data.loc[:"2016-08-18"], data.loc["2016-08-18":]
+        return (train_data[X_columns], train_data[Y_columns]), (test_data[X_columns], test_data[Y_columns])
     else:
         train_data, test_data = data, None
-    return (train_data[X_columns], train_data[Y_columns]), (test_data[X_columns], test_data[Y_columns])
+        return (train_data[X_columns], train_data[Y_columns]), (None, None)

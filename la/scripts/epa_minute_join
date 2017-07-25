@@ -25,7 +25,8 @@ if __name__ == "__main__":
     minute_data.index = pd.to_datetime(minute_data.index).tz_localize("UTC").tz_convert('US/Pacific')
     minute_data = minute_data.sort_index()
 
-    epa_data = pd.read_csv(args.epa_file, index_col='datetime') epa_data.index = pd.to_datetime(epa_data.index).tz_localize('US/Pacific')
+    epa_data = pd.read_csv(args.epa_file, index_col='datetime')
+    epa_data.index = pd.to_datetime(epa_data.index).tz_localize('US/Pacific')
 
     merged_data = minute_data.merge(epa_data, how='outer', left_index=True, right_index=True).dropna()
     print(merged_data.to_csv(index_label='datetime'))
