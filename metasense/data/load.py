@@ -6,12 +6,14 @@ warnings.filterwarnings('ignore')
 
 INITIAL_REMOVE = {
     4: 40,
+    12: 400,
     10: 150,
     8: 100,
     9: 110
 }
 AFTER_REMOVE = {
     4: 8,
+    12: 80,
 }
 
 X_columns = ['co-corr', 'co', 'co-u', 'co-A', 'co-W', 'no2-corr', 'no2', 'no2-u', 'no2-A', 'no2-W', 'o3-corr', 'o3', 'o3-u', 'o3-A', 'o3-W', 'temperature',
@@ -56,6 +58,20 @@ CORRECTIONS = {
 
 BASE_VOLTAGE = {
     4: {
+        'CO': {
+            'W': 336,
+            'A': 260,
+        },
+        'NO2': {
+            'W': 250,
+            'A': 270,
+        },
+        'O3': {
+            'W': 278,
+            'A': 380,
+        },
+    },
+    12: {
         'CO': {
             'W': 336,
             'A': 260,
